@@ -24,7 +24,18 @@
 #include "stdafx.h"
 
 
+int arr[25];
+
 int get_steps(int s)
 {
-	return 0;
+	if (s == 0) return 0;
+	else if (s == 1 || s == 2) return s;
+	else if (arr[s] == 0)
+	{
+		arr[s] = get_steps(s - 1) + get_steps(s - 2);
+		return arr[s];
+	}
+	else
+		return arr[s];
 }
+
