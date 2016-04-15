@@ -36,61 +36,46 @@ more parameters .
 #include<stdlib.h>
 
 
-
-
 int path(int *maze, int *ref, int rows, int columns, int x1, int y1, int dest, int xtemp, int ytemp, int prev)
 {
 
 
-	if (xtemp + ytemp == dest) return 1;
+	
+	if (xtemp + ytemp == dest && maze[xtemp + ytemp] == 1) return 1;
 
 
 
+	if (maze[xtemp + 1 + ytemp] == 1 && ref[xtemp + 1 + ytemp] != -1 && prev != 3) 
+        return path(maze, ref, rows, columns, x1, y1, dest, xtemp + 1, ytemp, 1);
 
-	if (maze[xtemp + 1 + ytemp] == 1 && ref[xtemp + 1 + ytemp] != -1 && prev != 3) {
-
-		if (path(maze, ref, rows, columns, x1, y1, dest, xtemp + 1, ytemp, 1))
-		{
-			return 1;
-		}
+	else if (xtemp + 1 + ytemp  < rows + columns)
+	         ref[xtemp + 1 + ytemp] = -1; 
 
 
-	}
-	else { ref[xtemp + 1 + ytemp] = -1; }
 
 	if (maze[xtemp + ytemp + columns] == 1 && ref[xtemp + ytemp + columns] != -1 && prev != 4)
-	{
+		return	path(maze, ref, rows, columns, x1, y1, dest, xtemp, ytemp + columns, 2);
+
+	else if (xtemp + ytemp + columns < rows + columns)
+	     ref[xtemp + ytemp + columns] = -1; 
+
+	
+	
+	if (maze[xtemp + ytemp - 1] == 1 && ref[xtemp + ytemp - 1] != -1 && prev != 1)
+    	return path(maze, ref, rows, columns, x1, y1, dest, xtemp - 1, ytemp, 3);
+
+	else if (xtemp + ytemp - 1 >= 0)
+	 ref[xtemp + ytemp - 1] = -1;
 
 
-		if (path(maze, ref, rows, columns, x1, y1, dest, xtemp, ytemp + columns, 2))
-		{
-			return 1;
-		}
-	}
-	else { ref[xtemp + ytemp + columns] = -1; }
-
-	if (maze[xtemp + ytemp - 1] == 1 && ref[xtemp + ytemp - 1] != -1 && prev != 1){
 
 
-		if (path(maze, ref, rows, columns, x1, y1, dest, xtemp - 1, ytemp, 3))
-		{
-			return 1;
-		}
-	}
-	else { ref[xtemp + ytemp - 1] = -1; }
+	if (maze[xtemp + ytemp - columns] == 1 && ref[xtemp + ytemp - columns] != -1 && prev != 2)
+		return path(maze, ref, rows, columns, x1, y1, dest, xtemp, ytemp - columns, 4);
 
-	if (maze[xtemp + ytemp - columns] == 1 && ref[xtemp + ytemp - columns] != -1 && prev != 2){
-
-
-		if (path(maze, ref, rows, columns, x1, y1, dest, xtemp, ytemp - columns, 4))
-		{
-			return 1;
-		}
-	}
-	else
-	{
+	else if (xtemp + ytemp - columns >= 0)
 		ref[xtemp + ytemp - columns] = -1;
-	}
+	
 
 
 
@@ -98,6 +83,7 @@ int path(int *maze, int *ref, int rows, int columns, int x1, int y1, int dest, i
 	if (x1 == xtemp && y1 == ytemp){
 		return 0;
 	}
+
 	ref[xtemp + ytemp] = -1;
 	return 0;
 
@@ -113,9 +99,11 @@ int path_exists(int *maze, int rows, int columns, int x1, int y1, int x2, int y2
 		return 0;
 
 
-	int *ref = (int *)calloc(rows*columns, sizeof(int));
-	return path(maze, ref, rows, columns, x1, y1, x2*columns + y2, x1, y1, x1 + y1);
-
+	else{
+		int *ref = (int *)calloc(rows*columns, sizeof(int));
+		return path(maze, ref, rows, columns, x1, y1, x2*columns + y2, x1, y1, x1 + y1);
+	}
 }
+
 
 

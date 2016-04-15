@@ -34,7 +34,75 @@ Note : Check the function Parameters ,Its a double pointer .
 #include "stdafx.h"
 #include<stdlib.h>
 
+int index = 0;
+int back = -1, up = 0;
+
+void spiralArray(int rows, int columns, int **input_array, int *arr, int tRows, int tCols, int direction, int mIndex)
+{
+	if (index == mIndex + 1) return;
+
+	arr[index++] = input_array[tRows][tCols];
+
+	if (direction == 1 && tCols<columns - 1)
+	{
+		spiralArray(rows, columns, input_array, arr, tRows, tCols + 1, direction, mIndex);
+	}
+	else if (direction == 1)
+	{
+		columns--;
+		spiralArray(rows, columns, input_array, arr, tRows + 1, tCols, 2, mIndex);
+
+	}
+
+	if (direction == 2 && tRows<rows - 1)
+	{
+		spiralArray(rows, columns, input_array, arr, tRows + 1, tCols, direction, mIndex);
+	}
+	else if (direction == 2)
+	{
+		rows--;
+		spiralArray(rows, columns, input_array, arr, tRows, tCols - 1, 3, mIndex);
+	}
+	if (direction == 3 && back + 1<tCols)
+	{
+		spiralArray(rows, columns, input_array, arr, tRows, tCols - 1, direction, mIndex);
+	}
+	else if (direction == 3)
+	{
+		back++;
+		spiralArray(rows, columns, input_array, arr, tRows - 1, tCols, 4, mIndex);
+	}
+
+	if (direction == 4 && up + 1<tRows)
+	{
+		spiralArray(rows, columns, input_array, arr, tRows - 1, tCols, direction, mIndex);
+	}
+	else if (direction == 4)
+	{
+		up++;
+		spiralArray(rows, columns, input_array, arr, tRows, tCols + 1, 1, mIndex);
+	}
+
+
+}
+
+
+
+
+
 int *spiral(int rows, int columns, int **input_array)
 {
-	return NULL;
+	if (input_array == NULL || rows < 1 || columns < 1)
+		return NULL;
+
+	else
+	{
+		index = 0, back = -1, up = 0;
+		int *arr = (int *)calloc(rows*columns, sizeof(int));
+		spiralArray(rows, columns, input_array, arr, 0, 0, 1, (rows*columns) - 1);
+		return arr;
+	}
+
+
 }
+
