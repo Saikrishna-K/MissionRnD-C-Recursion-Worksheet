@@ -43,6 +43,66 @@ P.S: The Above Problem is just a modified version of a popular BackTracking prob
 */
 
 #include "stdafx.h"
+#include<stdlib.h>
+
+int *arr1;
+int *b;
+bool flag = false;
+
+bool path(int k, int i, int n)
+{
+	int j;
+	for (j = 0; j < k; j++)
+	{
+		if (i == arr1[j] || (j - arr1[j] == k - i) || j + arr1[j] == k + i)
+		{
+			return false;
+		}
+
+	}
+
+	return true;
+
+}
+
+
+void sniper(int k, int n)
+{
+
+	for (int i = 0; i < n; i++)
+	{
+		if (path(k, i, n))
+		{
+			arr1[k] = i;
+			if (k == n - 1){
+				flag = true;
+				for (i = 0; i < n; i++)
+				{
+					b[i] = arr1[i];
+				}
+				return;
+			}
+
+			if (flag == false)
+				sniper(k + 1, n);
+
+		}
+	}
+
+}
+
+
+
 int solve_nsnipers(int *battlefield, int n){
-	return 0;
+	if (battlefield == NULL || n < 4) return 0;
+	flag = false;
+	int k = 0;
+	arr1 = (int *)calloc(n, sizeof(int));
+	b = (int *)calloc(n, sizeof(int));
+	sniper(0, n);
+	for (int i = 0; i < n; i++)
+	{
+		*((battlefield + i*n) + b[i]) = 1;
+	}
+	return 1;
 }
